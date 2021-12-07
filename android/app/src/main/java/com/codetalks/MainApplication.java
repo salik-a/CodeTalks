@@ -1,4 +1,4 @@
-package com.codetalks;
+package com.codetalkss;
 
 import android.app.Application;
 import android.content.Context;

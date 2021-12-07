@@ -1,4 +1,4 @@
-package com.codetalks;
+package com.codetalkss;
 
 import com.facebook.react.ReactActivity;
 
