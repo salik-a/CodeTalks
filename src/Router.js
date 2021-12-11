@@ -13,12 +13,13 @@ const Stack = createNativeStackNavigator();
 
 
 
+
 function App() {
     const [user, setUser] = React.useState("loading");
     React.useEffect(() => {
-        auth().onAuthStateChanged(user => {
+        auth().onAuthStateChanged(users => {
             setTimeout(() => {
-                if (user) {
+                if (users) {
                     console.log("user var")
                     setUser("true")
                 } else {
@@ -29,32 +30,28 @@ function App() {
         })
     }, [])
 
-    const AuthStack = () => {
-        return (
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="Sign" component={Sign} />
-            </Stack.Navigator>
-        );
-    }
-    const MainStack = () => {
-        return (
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="ChatRooms" component={ChatRooms} />
-                <Stack.Screen name="Settings" component={Settings} />
-            </Stack.Navigator>
-        );
-    }
+
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
-                {user == "loading" ? (<Stack.Screen name="Splash" component={Splash} />) : (
-                    user == "false" ? (<Stack.Screen name="AuthStack" component={AuthStack} />) : (
-                        <Stack.Screen name="MainStack" component={MainStack} />
-                    )
-                )}
-            </Stack.Navigator>
+
+            {user == "loading" ? (
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="Splash" component={Splash} />
+                </Stack.Navigator>
+            ) : (user == "false" ? (
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="Login" component={Login} options={{ presentation: "fullScreenModal" }} />
+                    <Stack.Screen name="Sign" component={Sign} options={{ presentation: "fullScreenModal" }} />
+                </Stack.Navigator>
+            ) : (
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="ChatRooms" component={ChatRooms} />
+                    <Stack.Screen name="Settings" component={Settings} />
+                </Stack.Navigator>
+            )
+            )}
+
         </NavigationContainer>
     );
 }
