@@ -1,62 +1,60 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, FlatList } from "react-native";
 import styles from "./ChatRoomStyle"
-import auth from "@react-native-firebase/auth"
+import firestore from "@react-native-firebase/firestore"
 import { FAB } from "react-native-paper";
 import ModalCard from "../../components/ModalCard";
+import Header from "../../components/Header"
+import { useNavigation } from "@react-navigation/core"
+import uuid from 'react-native-uuid';
+import RoomCard from "../../components/RoomCard/RoomCard";
 
 
+const ChatRooms = () => {
 
-const ChatRooms = ({ navigation }) => {
-
+    const navigation = useNavigation();
+    const column = 2;
     const [visible, setVisible] = React.useState(false);
+    const [rooms, setRooms] = React.useState([]);
 
-    const signIn = () => {
-        auth()
-            .signInWithEmailAndPassword('jane.doe@example.com', 'SuperSecretPassword!')
-            .then((res) => {
-                //console.log(res);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-    const signOut = () => {
-        auth()
-            .signOut()
-            .then((res) => {
-                //console.log(res);
-                //navigation.navigate("Login")
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
-    console.log(auth().currentUser)
+    React.useEffect(() => {
+        firestore().collection("chatrooms").onSnapshot((snapshot) => {
+            setRooms(snapshot.docs.map((room) => room._data).sort((a, b) => a.date > b.date))
+        })
+    }, [])
 
-    const handleAddRoom = () => {
+    console.log("rooms", rooms)
 
+    const handleAddRoom = async (content) => {
+        setVisible(!visible);
+        await firestore().collection("chatrooms").add({
+            name: content,
+            id: uuid.v4(),
+            date: new Date().toISOString(),
+        })
     }
 
-    function handleModalVisible() {
+    const handleVisible = () => {
         setVisible(!visible);
     }
 
-    function handleSendContent(content) {
-        handleModalVisible()
-
-    }
+    const renderItem = ({ item }) => (<RoomCard room = {item} />)
 
     return (
         <View style={styles.container}>
-            <Text>ChatRooms</Text>
-            <Button title="sign out" onPress={signOut} />
+            <Header />
+            <FlatList
+                data={rooms}
+                renderItem={renderItem}
+                numColumns={column}
+            />
 
-            <FAB icon="plus" style={{ position: "absolute", bottom: 20, right: 20, backgroundColor: "#a570fb" }} onPress={handleModalVisible} color="white" />
+            <FAB icon="plus" style={{ position: "absolute", bottom: 20, right: 20, backgroundColor: "#a570fb" }} onPress={handleVisible} color="white" />
             <ModalCard
                 visible={visible}
-                onClose={handleModalVisible}
-                onSend={handleSendContent}
+                onClose={() => setVisible(!visible)}
+                onSend={handleAddRoom}
+                
             />
         </View>
     )
