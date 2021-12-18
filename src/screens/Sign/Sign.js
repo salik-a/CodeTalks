@@ -28,7 +28,7 @@ const Sign = ({ navigation }) => {
         usermail: Yup.string().email('Invalid email').required('Required'),
     });
 
-    const handleLogin = async (formValues) => {
+    const handleSign = async (formValues) => {
         try {
             await auth().createUserWithEmailAndPassword(formValues.usermail, formValues.password)
             const update = {
@@ -56,7 +56,7 @@ const Sign = ({ navigation }) => {
             <Text style={[styles.header, isKeyBoardOpen ? { marginTop: 5 } : { marginTop: 50 }]}>Kod Sohbetleri</Text>
             <Formik
                 initialValues={initialForm}
-                onSubmit={values => handleLogin(values)}
+                onSubmit={values => handleSign(values)}
                 validationSchema={SignupSchema}
             >
                 {({ handleSubmit, values, handleChange, errors, touched, isValid, setFieldTouched }) => (

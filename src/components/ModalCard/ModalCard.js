@@ -4,13 +4,13 @@ import styles from "./ModalCardStyle"
 import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const ModalCard = ({ visible, onClose, onSend }) => {
-    const [text, setText] = React.useState(null)
+    const [text, setText] = React.useState("")
     function handleSend() {
-        if (!text) {
+        if (text == "") {
             return
         }
         onSend(text);
-        setText(null);
+        setText("");
     }
     return (
         <Modal
@@ -29,6 +29,7 @@ const ModalCard = ({ visible, onClose, onSend }) => {
                             placeholder="Oda Adı Gir..."
                             onChangeText={setText}
                             multiline
+                            autoCapitalize="sentences"
                         />
                     </View>
                     <TouchableOpacity style={styles.button} onPress={handleSend}>
