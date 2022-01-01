@@ -19,26 +19,24 @@ const ChatRooms = () => {
 
     React.useEffect(() => {
         firestore().collection("chatrooms").onSnapshot((snapshot) => {
-            setRooms(snapshot.docs.map((room) => room._data).sort((a, b) => a.date > b.date))
+            setRooms(snapshot.docs.map((room) => ({ data: room._data, roomId: room.id })).sort((a, b) => a.data.date > b.data.date))
+            //console.log("snap", snapshot.docs.map((room) => room.id))
         })
     }, [])
-
-    console.log("rooms", rooms)
-
+   
     const handleAddRoom = async (content) => {
-        setVisible(!visible);
-        await firestore().collection("chatrooms").add({
+         firestore().collection("chatrooms").add({
             name: content,
-            id: uuid.v4(),
             date: new Date().toISOString(),
         })
+        setVisible(!visible);
     }
 
     const handleVisible = () => {
         setVisible(!visible);
     }
 
-    const renderItem = ({ item }) => (<RoomCard room = {item} />)
+    const renderItem = ({ item }) => (<RoomCard room={item.data} onPress={()=>navigation.navigate("Chat",item)} />)
 
     return (
         <View style={styles.container}>
@@ -47,6 +45,7 @@ const ChatRooms = () => {
                 data={rooms}
                 renderItem={renderItem}
                 numColumns={column}
+                keyExtractor={()=> uuid.v4()}
             />
 
             <FAB icon="plus" style={{ position: "absolute", bottom: 20, right: 20, backgroundColor: "#a570fb" }} onPress={handleVisible} color="white" />

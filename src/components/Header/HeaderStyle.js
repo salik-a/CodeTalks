@@ -8,7 +8,8 @@ export default StyleSheet.create({
         justifyContent: "space-between",
         padding: 10,
         alignItems: "center",
-        marginBottom: 10
+        marginBottom: 10,
+        backgroundColor: "white"
     },
     title: {
         color: "#a570fb",

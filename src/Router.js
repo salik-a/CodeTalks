@@ -7,6 +7,7 @@ import Login from './screens/Login';
 import Sign from './screens/Sign';
 import Splash from './screens/Splash';
 import ChatRooms from './screens/ChatRooms';
+import Chat from './screens/Chat';
 import Settings from './screens/Settings';
 import auth from "@react-native-firebase/auth"
 const Stack = createNativeStackNavigator();
@@ -26,7 +27,7 @@ function App() {
                     console.log("yok")
                     setUser("false")
                 }
-            }, 1250)
+            }, 1500)
         })
     }, [])
 
@@ -48,6 +49,7 @@ function App() {
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="ChatRooms" component={ChatRooms} />
                     <Stack.Screen name="Settings" component={Settings} />
+                    <Stack.Screen name="Chat" component={Chat} />
                 </Stack.Navigator>
             )
             )}
